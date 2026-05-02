@@ -8,8 +8,8 @@ var cors = require("cors");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 // UNCOMMENT after npm install:
-// var supabaseJs = require("@supabase/supabase-js");
-// var supabase = supabaseJs.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+var supabaseJs = require("@supabase/supabase-js");
+var supabase = supabaseJs.createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 var app = express();
 app.use(cors());
@@ -76,6 +76,10 @@ app.post("/api/admin/users", async function(req, res) {
   if (req.body.adminKey !== ADMIN_KEY) return res.json({ success: false });
   var result = await supabase.from("users").select("email,name,plan,expires_at,created_at").order("created_at", { ascending: false });
   res.json({ success: true, users: result.data });
+});
+
+app.get("/api/health", function(req, res) {
+  res.json({ status: "SellerMate API is running" });
 });
 
 var PORT = process.env.PORT || 3000;
